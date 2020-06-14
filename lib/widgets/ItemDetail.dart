@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ItemDetail extends StatefulWidget {
   @override
@@ -20,11 +21,91 @@ class _ItemDetailState extends State<ItemDetail> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            //image
+            Center(
+              child: FractionallySizedBox(
+                widthFactor: 0.8,
+                child: _itemInfo.image,
+              ),
+            ),
+            SizedBox(height: 20.0),
+
+            //title
+            Text(
+              _itemInfo.title,
+              style: TextStyle(fontSize: 22.0),
+            ),
+            SizedBox(height: 10.0),
+
+            //description
+            Text(
+              _itemInfo.description,
+              style: TextStyle(fontSize: 15.0, color: Colors.black54),
+            ),
+            SizedBox(height: 10.0),
+
+            //price
+            Text(
+              _itemInfo.price,
+              style: TextStyle(fontSize: 18.0, color: Colors.orange),
+            ),
+
+            //detail contents
             Container(
-              margin: EdgeInsets.all(30),
+              padding: EdgeInsets.all(30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _itemInfo.detailContents.map<Widget>((content) {
+                  return Container(
+                    margin: EdgeInsets.only(top: 5),
+                    child: Text(content, style: TextStyle(fontSize: 15.0),),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            //cart
+            Container(
+              padding: EdgeInsets.only(left: 30, right: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 60.0,
+                    child: TextField(
+                      keyboardType: TextInputType.numberWithOptions(),
+                      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(9),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 5.0),
+                  Text('개', style: TextStyle(fontSize: 16),),
+                  Expanded(
+                    child: SizedBox(),
+                  ),
+                  Text(_itemInfo.price, style: TextStyle(fontSize: 18, color: Colors.orange),),
+                ],
+              ),
+            ),
+
+            Container(
               width: double.infinity,
-              child: _itemInfo.image,
+              margin: EdgeInsets.fromLTRB(30, 5, 30, 8),
+              child: FlatButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Text('장바구니에 넣기', style: TextStyle(fontSize: 16),),
+                onPressed: () {
+
+                },
+              ),
             )
+
           ],
         ),
       ),
