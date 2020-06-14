@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skying/widgets/Profile.dart';
+import 'package:skying/utils/Global.dart';
 
 class MainWidget extends StatefulWidget {
   @override
@@ -9,32 +10,38 @@ class MainWidget extends StatefulWidget {
 class _MainWidgetState extends State<MainWidget> {
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      automaticallyImplyLeading: false,
+      flexibleSpace: SafeArea(
+        child: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.shopping_basket),
+                text: 'Item List',
+              ),
+              Tab(
+                icon: Icon(Icons.shopping_cart),
+                text: 'Cart',
+              ),
+              Tab(
+                icon: Icon(Icons.person),
+                text: 'Profile',
+              ),
+            ]
+        ),
+      ),
+    );
+
+    final mq = MediaQuery.of(context);
+    Global.statusBarHeight = mq.padding.top;
+    Global.appBarHeight = appBar.preferredSize.height;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: SafeArea(
-            child: TabBar(
-              tabs: [
-                Tab(
-                  icon: Icon(Icons.shopping_basket),
-                  text: 'Item List',
-                ),
-                Tab(
-                  icon: Icon(Icons.shopping_cart),
-                  text: 'Cart',
-                ),
-                Tab(
-                  icon: Icon(Icons.person),
-                  text: 'Profile',
-                ),
-              ]
-            ),
-          ),
-        ),
+        appBar: appBar,
 
-      body: TabBarView(
+        body: TabBarView(
         children: <Widget>[
           Text(
           '아이템 리스트입니다',
