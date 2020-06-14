@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skying/widgets/MainWidget.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -49,7 +50,12 @@ class _LoginState extends State<Login> {
                 FlatButton(
                   child: Text('sign in'),
                   onPressed: () async {
-                    await Navigator.pushNamed(context, '/main');
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context)=>MainWidget()
+                      )
+                    );
                   },
                 ),
                 FlatButton(
