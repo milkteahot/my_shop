@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skying/widgets/ItemList.dart';
 import 'package:skying/widgets/Profile.dart';
+import 'package:skying/widgets/Cart.dart';
 import 'package:skying/utils/Global.dart';
 
 class MainWidget extends StatefulWidget {
@@ -45,10 +46,7 @@ class _MainWidgetState extends State<MainWidget> {
         body: TabBarView(
         children: <Widget>[
           ItemList(),
-          Text(
-            '카트입니다',
-            style: TextStyle(fontSize: 15.0),
-          ),
+          Cart(),
           Profile(),
         ]
         ),
