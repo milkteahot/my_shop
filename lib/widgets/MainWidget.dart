@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skying/widgets/Profile.dart';
 
 class MainWidget extends StatefulWidget {
   @override
@@ -43,10 +44,7 @@ class _MainWidgetState extends State<MainWidget> {
             '카트입니다',
             style: TextStyle(fontSize: 15.0),
           ),
-          Text(
-            '프로필입니다',
-            style: TextStyle(fontSize: 15.0),
-          ),
+          Profile(),
         ]
         ),
       ),
