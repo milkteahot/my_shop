@@ -9,66 +9,74 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:<Widget>[
-            Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-            'My Shop',
-            style: TextStyle(fontSize: 50.0),
-            ),
-            Container(width: 10.0),
-            Icon(Icons.color_lens, size: 50.0,),
-            ]
-            ),
-            Container(width: 30.0),
-            FractionallySizedBox(
-              widthFactor: 0.5,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Please enter an email',
-                ),
-              ),
-            ),
-            FractionallySizedBox(
-              widthFactor: 0.5,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Please enter a password'
-                ),
-              ),
-            ),
-            Container(width: 30.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FlatButton(
-                  child: Text('sign in'),
-                  onPressed: () async {
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context)=>MainWidget()
-                      )
-                    );
-                  },
-                ),
-                FlatButton(
-                  child: Text('sign up'),
-                  onPressed: (){
-                  },
-                )
-              ],
-            )
-          ]
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage("https://i.pinimg.com/564x/da/e5/17/dae517b6c7100a02eaed47f351d32140.jpg"), fit: BoxFit.cover,
         )
       ),
-      )
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:<Widget>[
+              Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+              'Day log',
+              style: TextStyle(fontSize: 50.0, color: Colors.orangeAccent,  ),
+              ),
+              Container(width: 10.0),
+//              Icon(Icons.color_lens, size: 50.0,),
+              ]
+              ),
+              Container(width: 30.0),
+              FractionallySizedBox(
+                widthFactor: 0.5,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Please enter an email',
+                  ),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: 0.5,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Please enter a password'
+                  ),
+                ),
+              ),
+              Container(width: 30.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlatButton(
+                    child: Text('sign in'),
+                    onPressed: () async {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context)=>MainWidget()
+                        )
+                      );
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('sign up'),
+                    onPressed: (){
+                    },
+                  )
+                ],
+              )
+            ]
+          )
+        ),
+        )
+      ),
     );
   }
 }

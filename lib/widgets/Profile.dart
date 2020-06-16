@@ -20,7 +20,7 @@ class _ProfileState extends State<Profile> {
                     height: 120,
                     child: Image(
                       image: NetworkImage(
-                        "https://lh3.googleusercontent.com/proxy/A7kL4In7ZausPxYjeuriMyTLC5i9nYod2tXEhtT4I_dXHrmEuBm4oIGMkVBCF5idDJUigOL_eqK74ZfPn-jXYrIdrj2Eg1CuoNjbRlLy3lS9uMqWJsgIkXOmIgvJsHNpyX04Dwz7HHl4ySxhvMSu8hamQD-uGQa2"
+                        "https://previews.123rf.com/images/musicphone1/musicphone11607/musicphone1160700049/61129527-%EA%B7%80%EC%97%AC%EC%9A%B4-%EA%B3%A0%EC%96%91%EC%9D%B4-%EA%B7%B8%EB%A6%BC-.jpg"
                       ),
                     ),
                   ),
