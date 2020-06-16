@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:skying/utils/StringUtil.dart';
 
 class ItemDetail extends StatefulWidget {
   @override
@@ -7,8 +8,25 @@ class ItemDetail extends StatefulWidget {
 }
 
 class _ItemDetailState extends State<ItemDetail> {
-  _ItemInfo _itemInfo = null;
-  
+  _ItemInfo _itemInfo;
+  final _countController = TextEditingController(text: '1'); // TextEditingController 변수를 추가. 기본값 1.
+
+  @override
+  void initState() {
+    super.initState();
+
+    _countController.addListener(() {
+      print(_countController.text); //TextField 위젯의 값을 구할 수 있음
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _countController.dispose(); // Controller는 꼭 dispose함수에서 Controller의 dispose함수를 불러줘야 함
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -49,7 +67,7 @@ class _ItemDetailState extends State<ItemDetail> {
 
                 //price
                 Text(
-                  _itemInfo.price,
+                  '${StringUtil.makeCommaedString((_itemInfo.price))} 원',
                   style: TextStyle(fontSize: 18.0, color: Colors.orange),
                 ),
 
@@ -93,7 +111,8 @@ class _ItemDetailState extends State<ItemDetail> {
                 SizedBox(
                   width: 60.0,
                   child: TextField(
-                    keyboardType: TextInputType.numberWithOptions(),
+                    controller: _countController, //controller 지정
+                   keyboardType: TextInputType.numberWithOptions(),
                     inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
@@ -107,7 +126,7 @@ class _ItemDetailState extends State<ItemDetail> {
                 Expanded(
                   child: SizedBox(),
                 ),
-                Text(_itemInfo.price, style: TextStyle(fontSize: 18, color: Colors.orange),),
+                Text('${_computeTotalPrice()} 원', style: TextStyle(fontSize: 18, color: Colors.orange),),
               ],
             ),
           ),
@@ -129,7 +148,11 @@ class _ItemDetailState extends State<ItemDetail> {
       ),
     );
   }
-  
+
+  String _computeTotalPrice() {
+    final count = (_countController.text == '') ? 0: int.parse(_countController.text);
+    return StringUtil.makeCommaedString(_itemInfo.price * count);
+  }
   void _initItemInfo() {
     if(_itemInfo != null)
       return;
@@ -138,7 +161,7 @@ class _ItemDetailState extends State<ItemDetail> {
         Image.network('http://thumbnail.10x10.co.kr/webimage/image/basic600/137/B001377515.jpg'),
         '뼈다귀 모양 베개',
         '우리 귀여운 강아지에게 꿀잠을!!',
-        '10,000원',
+        10000,
         <String>[
           '아이에게 꿀잠을 선사할 수 있는 베개입니다.',
           '뼈다귀 모양이므로 강아지에게 뼈다귀를 뜯는 꿈을 꿀 수 있도록 합니다.',
@@ -158,7 +181,7 @@ class _ItemInfo {
   Image image;
   String title;
   String description;
-  String price;
+  int price;
   List<String> detailContents;
 
   _ItemInfo(this.image, this.title, this.description, this.price, this.detailContents);
