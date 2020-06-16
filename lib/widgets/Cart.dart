@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:skying/widgets/ItemDetail.dart';
@@ -10,7 +11,17 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
 
-  List<_ItemInfo> _item_infos = null;
+  List<_ItemInfo> _itemInfos;
+  final _itemidControllerMap = Map<int, TextEditingController>();
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    for (final controller in _itemidControllerMap.values)
+      controller.dispose();
+    _itemidControllerMap.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +29,7 @@ class _CartState extends State<Cart> {
     _initItemInfos();
 
     final widgets = <Widget>[];
-    for(final ii in _item_infos){
+    for(final ii in _itemInfos){
       widgets.add(
           Row(
             children: <Widget>[
@@ -60,16 +71,24 @@ class _CartState extends State<Cart> {
                         Text('개수'),
                         Expanded(child: SizedBox()),
                         Container(
-                            width: 20,
-                            height: 20,
+                            width: 25,
+                            height: 25,
                             margin: EdgeInsets.only(left:10, right:10),
                             child: FlatButton(
                                 padding: EdgeInsets.all(0),
-                                child: Icon(Icons.add, size: 20,))),
+                                child: Icon(Icons.add, size: 20),
+
+                                onPressed: () {
+                                  final ctr = _itemidControllerMap[ii.id];
+                                  final count = (ctr.text == '') ? 0: int.parse(ctr.text);
+                                  ctr.text = '${min(999, count+1)}';
+                                },
+                            )),
                         SizedBox(
                           height: 25.0,
                           width: 40.0,
                           child: TextField(
+                            controller: _itemidControllerMap[ii.id],  // Controller를 등록함
                             keyboardType: TextInputType.numberWithOptions(),
                             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(3)
@@ -82,12 +101,19 @@ class _CartState extends State<Cart> {
                           ),
                         ),
                         Container(
-                            width: 20,
-                            height: 20,
+                            width: 25,
+                            height: 25,
                             margin: EdgeInsets.only(left:10, right:10),
                             child: FlatButton(
                                 padding: EdgeInsets.all(0),
-                                child: Icon(Icons.remove, size: 20,))),
+                                child: Icon(Icons.remove, size: 20),
+
+                                onPressed: () {
+                                  final ctr = _itemidControllerMap[ii.id];
+                                  final count = (ctr.text == '')? 0: int.parse(ctr.text);
+                                  ctr.text = '${max(0, count - 1)}';
+                                },
+                            )),
                       ],
                     ),
                     Row(
@@ -136,7 +162,7 @@ class _CartState extends State<Cart> {
                 SizedBox(width: 18),
 
                 Text(
-                  '${StringUtil.makeCommaedString(_item_infos.where((ii) => ii.isChecked).map(
+                  '${StringUtil.makeCommaedString(_itemInfos.where((ii) => ii.isChecked).map(
                       (ii)=>ii.price*ii.count
                   ).fold(0, (a, b) => a+b))} 원',
                 style: TextStyle(fontSize: 18, color: Colors.orange),),
@@ -164,15 +190,26 @@ class _CartState extends State<Cart> {
   }
     // Item 데이터 초기화
     void _initItemInfos () {
-      if (_item_infos != null)
+      if (_itemInfos != null)
         return;
 
-      _item_infos = <_ItemInfo>[
+      _itemInfos = <_ItemInfo>[
         _ItemInfo(0, Image.network('http://thumbnail.10x10.co.kr/webimage/image/basic600/137/B001377515.jpg'    ), '뼈다귀 모양 베개'  , 10000, 1),
         _ItemInfo(1, Image.network('https://mi6.rightinthebox.com/images/384x384/201704/pqf1493005948537.jpg'   ), '빨간 스웨터'       ,  8000, 2),
         _ItemInfo(2, Image.network('https://seoul-p-studio.bunjang.net/product/81561624_3_1520763876_w640.jpg'  ), '강아지 용 백팩'    , 18000, 3),
         _ItemInfo(3, Image.network('https://mi7.rightinthebox.com/images/384x384/201307/khabye1372647520194.jpg'), '귀여운 강아지 신발', 12000, 1),
       ];
+
+      for (final ii in _itemInfos) { //각 아이템 데이터 당 하나씩 Controller를 만든다
+        final controller = TextEditingController(text: '${ii.count}'); //기본값
+        _itemidControllerMap[ii.id] = controller; //맵에 등
+
+        controller.addListener(() { // Controller new를 이곳에서 하기 때문에, 특별히 initState 말고 여기서 함
+          setState(() {
+            ii.count = (controller.text == '') ? 0: int.parse(controller.text);
+          });
+        });
+      }
     }
 
 }

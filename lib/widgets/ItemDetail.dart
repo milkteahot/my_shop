@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:skying/utils/StringUtil.dart';
 
+enum ItemDetailResult {
+  BACK,
+  ADD_TO_CART,
+}
+
 class ItemDetail extends StatefulWidget {
   @override
   _ItemDetailState createState() => _ItemDetailState();
@@ -15,7 +20,7 @@ class _ItemDetailState extends State<ItemDetail> {
   void initState() {
     super.initState();
 
-    _countController.addListener(() {
+    _countController.addListener(() { //리스너 추
       print(_countController.text); //TextField 위젯의 값을 구할 수 있음
     });
   }
@@ -126,7 +131,10 @@ class _ItemDetailState extends State<ItemDetail> {
                 Expanded(
                   child: SizedBox(),
                 ),
-                Text('${_computeTotalPrice()} 원', style: TextStyle(fontSize: 18, color: Colors.orange),),
+                Text(
+                  '${_computeTotalPrice()} 원',
+                  style: TextStyle(fontSize: 18, color: Colors.orange),
+                ),
               ],
             ),
           ),
@@ -140,6 +148,7 @@ class _ItemDetailState extends State<ItemDetail> {
               padding: EdgeInsets.only(top: 10, bottom: 10),
               child: Text('장바구니에 넣기', style: TextStyle(fontSize: 16),),
               onPressed: () {
+                Navigator.pop(context, ItemDetailResult.ADD_TO_CART); // TODO: 눌렀을 때, ADD_TO_CART를 리턴하며 pop
 
               },
             ),
@@ -149,10 +158,11 @@ class _ItemDetailState extends State<ItemDetail> {
     );
   }
 
-  String _computeTotalPrice() {
-    final count = (_countController.text == '') ? 0: int.parse(_countController.text);
+  String _computeTotalPrice () {
+    final count = (_countController.text == '')? 0: int.parse(_countController.text);
     return StringUtil.makeCommaedString(_itemInfo.price * count);
   }
+
   void _initItemInfo() {
     if(_itemInfo != null)
       return;

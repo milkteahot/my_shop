@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:skying/widgets/ItemDetail.dart';
 
 class ItemList extends StatefulWidget {
+  Function onAddToCart;
+
+  ItemList({Key key, @required this.onAddToCart}): super(key:key);
+  //@required 가 매개변수 앞에 붙으면, 해당 매개변수를 꼭 넣어줘야 한다.
+
   @override
   _ItemListState createState() => _ItemListState();
 }
@@ -20,10 +25,17 @@ class _ItemListState extends State<ItemList> {
       widgets.add(
         FlatButton(
           onPressed: () async {
-            await Navigator.push(
+            final result = await Navigator.push<ItemDetailResult>(
               context,
-              MaterialPageRoute(builder: (context)=>ItemDetail())
-              );
+              MaterialPageRoute(builder: (context) => ItemDetail()),
+            );
+            if(result == ItemDetailResult.ADD_TO_CART) //"장바구니에 넣기"로 종료된 경우
+              widget.onAddToCart(); //위젯에 등록된 리스너를 호출
+
+//            await Navigator.push(
+//              context,
+//              MaterialPageRoute(builder: (context)=>ItemDetail())
+//              );
             },
             child: Row(
               children: <Widget>[
