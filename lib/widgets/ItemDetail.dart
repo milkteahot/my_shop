@@ -20,8 +20,12 @@ class _ItemDetailState extends State<ItemDetail> {
   void initState() {
     super.initState();
 
-    _countController.addListener(() { //리스너 추
-      print(_countController.text); //TextField 위젯의 값을 구할 수 있음
+    _countController.addListener(() { //리스너 추가
+      //on change
+      setState(() {
+
+      });
+      //print(_countController.text); //TextField 위젯의 값을 구할 수 있음
     });
   }
 
