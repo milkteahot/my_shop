@@ -3,6 +3,7 @@ import 'package:skying/widgets/LoadingWrapper.dart';
 import 'package:skying/utils/Global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:skying/utils/ServerApi.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -127,31 +128,45 @@ class _RegisterState extends State<Register> {
                             _isSubmitable = false;
                           });
 
-//                          await Future.delayed(Duration(seconds: 5));
-                          final res = await http.post(
-                            Global.server_address + '/api/customers',
-                            body: {
-                              'values' : json.encode({
-                                'email' : _emailCtr.text,
-                                'name' : _nameCtr.text,
-                                'address' : _addressCtr.text,
-                                'password' : _passwordCtr.text,
-                              }),
-                            }
+                          await ServerApi.registerCustomer(
+                              _emailCtr.text,
+                              _nameCtr.text,
+                              _addressCtr.text,
+                              _passwordCtr.text
                           );
-                          if(res.statusCode ~/100 == 2) { //성공 200시 회원가입뷰 닫기
-                            Navigator.pop(context, null);
-                            return;
-                          }
+                          Navigator.pop(context, null);
 
-                        _scaffoldKey.currentState
-                          .showSnackBar(SnackBar(content: Text('요청이 실패했습니다'),));
+//                          await Future.delayed(Duration(seconds: 5));
+//                          final res = await http.post(
+//                            Global.server_address + '/api/customers',
+//                            body: {
+//                              'values' : json.encode({
+//                                'email' : _emailCtr.text,
+//                                'name' : _nameCtr.text,
+//                                'address' : _addressCtr.text,
+//                                'password' : _passwordCtr.text,
+//                              }),
+//                            }
+//                          );
+//                          if(res.statusCode ~/100 == 2) { //성공 200시 회원가입뷰 닫기
+//                            Navigator.pop(context, null);
+//                            return;
+//                          }
+//
+//                        _scaffoldKey.currentState
+//                          .showSnackBar(SnackBar(content: Text('요청이 실패했습니다'),));
+//                          this.setState(() {
+//                            _isSubmitable = true;
+//                          });
+                        }on ServerApiException catch(e) {
+                          _scaffoldKey.currentState
+                              .showSnackBar(SnackBar(content: Text('요청이 실패했습니다'),));
                           this.setState(() {
                             _isSubmitable = true;
                           });
-                        } catch(e) {
+                        } catch (e) {
                           _scaffoldKey.currentState
-                              .showSnackBar(SnackBar(content: Text('요청이 실패했습니다'),));
+                              .showSnackBar(SnackBar(content: Text('에러: '+e.toString()),));
                           this.setState(() {
                             _isSubmitable = true;
                           });
