@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skying/widgets/HttpTest.dart';
 import 'package:skying/widgets/MainWidget.dart';
 import 'package:skying/widgets/Register.dart';
 
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
                       await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context)=>MainWidget()
+                            builder: (context)=>HttpTest()
                         )
                       );
                     },
