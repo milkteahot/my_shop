@@ -10,6 +10,7 @@ class HttpTest extends StatefulWidget {
 class _HttpTestState extends State<HttpTest> {
 //  String _response = '';
   _Data _data = _Data(0, 0, '', '');
+  bool _isLoading = false;
 
 //  Future<_Data> _dataFuture;
 //
@@ -44,18 +45,28 @@ class _HttpTestState extends State<HttpTest> {
                   textColor: Colors.white,
                   child: Text('테스트'),
                   onPressed: () async {
-                    final res = await http.get('https://jsonplaceholder.typicode.com/posts/1');
+//                    final res = await http.get('https://jsonplaceholder.typicode.com/posts/1');
 
-                    final json_body = json.decode(res.body);
-                    this.setState(() {
-//                    _response = 'status: ${res.statusCode}\n\n${res.body}';
-                      _data = _Data.fromJson(json_body);
-                    });
+//                    final json_body = json.decode(res.body);
+                      this.setState(() {
+                        _isLoading = true; //로딩중을 먼저 띄우고, fetch
+  //                    _response = 'status: ${res.statusCode}\n\n${res.body}';
+                      });
+                      final res = await http.get('https://jsonplaceholder.typicode.com/posts/1');
+
+                      final json_body = json.decode(res.body);
+                      this.setState(() {
+                        _data = _Data.fromJson(json_body);
+                        _isLoading = false; //데이터 불렀으므로 로딩중 표시 없앤다
+                      });
+
+//                      _data = _Data.fromJson(json_body);
+
 
                   },
                 ),
               ),
-              SizedBox(height: 20,),
+//              SizedBox(height: 20,),
 
 //              FutureBuilder<_Data> (
 //              future: _dataFuture,
@@ -74,22 +85,40 @@ class _HttpTestState extends State<HttpTest> {
             ],
           ),
         ),
-          Column(
-            children:<Widget> [
-              Expanded(
-              child: Container(
-                decoration: BoxDecoration( //이 부분으로 로딩중 입력 방지
-                  color: Colors.black38,
+          (_isLoading == false) ?
+              SizedBox():
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                        ),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-                  ),
-                ),
-              ),
-            ),
-            ],
-          ),
+//          Column(
+//            children:<Widget> [
+//              Expanded(
+//              child: Container(
+//                decoration: BoxDecoration( //이 부분으로 로딩중 입력 방지
+//                  color: Colors.black38,
+//                ),
+//                child: Center(
+//                  child: CircularProgressIndicator(
+//                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+//                  ),
+//                ),
+//              ),
+//            ),
+//            ],
+//          ),
       ],
       ),
     );
