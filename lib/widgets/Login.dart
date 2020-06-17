@@ -6,6 +6,7 @@ import 'package:skying/widgets/Register.dart';
 import 'package:skying/utils/Global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:skying/utils/ServerApi.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -92,43 +93,69 @@ class _LoginState extends State<Login> {
                         child: Text('sign in'),
                         onPressed: () async {
                           try{
-                            if(_formKey.currentState.validate() == false) {
-                              return;
-                            }
-                            setState(() {
-                              _isLoading = true;
-                            });
+    if(_formKey.currentState.validate() == false) {
+    return;
+    }
+    setState(() {
+    _isLoading = true;
+    });
 
-                            final res = await http.post(
-                              Global.server_address + '/api/login',
-                              body: {
-                                'type' : 'CUSTOMER',
-                                'login_id' : _emailCtrl.text,
-                                'password' : _passwordCtrl.text,
-                              }
-                            );
-                            if(res.statusCode ~/100 == 2) {
-                              setState(() {
-                                _isLoading = false;
-                              });
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MainWidget()
-                                )
-                              );
-                              return;
-                            }
+    final res = await ServerApi.login(
+    _emailCtrl.text,
+    _passwordCtrl.text,
+    );
 
-                            //실패시
+    //성공시
+    setState(() {
+    _isLoading = false;
+    });
+    await Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) => MainWidget()
+    )
+    );
+
+//                            final res = await http.post(
+//                              Global.server_address + '/api/login',
+//                              body: {
+//                                'type' : 'CUSTOMER',
+//                                'login_id' : _emailCtrl.text,
+//                                'password' : _passwordCtrl.text,
+//                              }
+//                            );
+//                            if(res.statusCode ~/100 == 2) {
+//                              setState(() {
+//                                _isLoading = false;
+//                              });
+//                              await Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                  builder: (context) => MainWidget()
+//                                )
+//                              );
+//                              return;
+//                            }
+//
+//                            //실패시
+//                            _scaffoldKey.currentState.showSnackBar(
+//                              SnackBar(
+//                                content: Text('로그인 실패\n${json.decode(res.body) ['message']}'),
+//                              )
+//                            );
+//                            setState(() {
+//                              _isLoading = false;
+//                            });
+                          }on ServerApiException catch(e) {
                             _scaffoldKey.currentState.showSnackBar(
                               SnackBar(
-                                content: Text('로그인 실패\n${json.decode(res.body) ['message']}'),
-                              )
+                                content: Text('로그인 실패\n${json.decode(e.response.body)['message']}'),
+                              ),
                             );
                             setState(() {
                               _isLoading = false;
                             });
+
                           } catch (e) {
                             _scaffoldKey.currentState.showSnackBar(
                               SnackBar(
