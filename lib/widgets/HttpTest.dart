@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert'; //추가해야 json decode 가능
+import 'dart:convert';//추가해야 json decode 가능
+
+import 'package:skying/widgets/LoadingWrapper.dart';
 
 class HttpTest extends StatefulWidget {
   @override
@@ -10,7 +12,7 @@ class HttpTest extends StatefulWidget {
 class _HttpTestState extends State<HttpTest> {
 //  String _response = '';
   _Data _data = _Data(0, 0, '', '');
-  bool _isLoading = false;
+  bool _isLoading = false; //변수 추가
 
 //  Future<_Data> _dataFuture;
 //
@@ -34,9 +36,9 @@ class _HttpTestState extends State<HttpTest> {
       appBar: AppBar(
         title: Text('Http Test'),
       ),
-      body: Stack(
-        children:<Widget> [
-          SingleChildScrollView(
+      body: LoadingWrapper(
+        isLoading: _isLoading,
+        child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Center(
@@ -50,7 +52,6 @@ class _HttpTestState extends State<HttpTest> {
 //                    final json_body = json.decode(res.body);
                       this.setState(() {
                         _isLoading = true; //로딩중을 먼저 띄우고, fetch
-  //                    _response = 'status: ${res.statusCode}\n\n${res.body}';
                       });
                       final res = await http.get('https://jsonplaceholder.typicode.com/posts/1');
 
@@ -59,10 +60,6 @@ class _HttpTestState extends State<HttpTest> {
                         _data = _Data.fromJson(json_body);
                         _isLoading = false; //데이터 불렀으므로 로딩중 표시 없앤다
                       });
-
-//                      _data = _Data.fromJson(json_body);
-
-
                   },
                 ),
               ),
@@ -85,24 +82,7 @@ class _HttpTestState extends State<HttpTest> {
             ],
           ),
         ),
-          (_isLoading == false) ?
-              SizedBox():
-                Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black38,
-                        ),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+
 //          Column(
 //            children:<Widget> [
 //              Expanded(
@@ -119,7 +99,7 @@ class _HttpTestState extends State<HttpTest> {
 //            ),
 //            ],
 //          ),
-      ],
+
       ),
     );
   }
